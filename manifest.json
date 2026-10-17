@@ -1,0 +1,10 @@
+{
+  "name": "Hanu Collection",
+  "short_name": "Hanu",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f9f6f0",
+  "theme_color": "#581c3f",
+  "icons": []
+}
