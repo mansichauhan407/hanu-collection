@@ -29,26 +29,91 @@
 
     <!-- Navigation Tabs -->
     <div class="max-w-6xl mx-auto px-4 mt-6 flex flex-wrap gap-2">
-        <button id="tab-Dashboard" onclick="switchTab('Dashboard')" class="btn-tab-active px-4 py-2 rounded-xl font-medium text-sm">Dashboard</button>
-        <button id="tab-Products" onclick="switchTab('Products')" class="btn-tab-inactive px-4 py-2 rounded-xl font-medium text-sm">Products</button>
-        <button id="tab-Sales" onclick="switchTab('Sales')" class="btn-tab-inactive px-4 py-2 rounded-xl font-medium text-sm">Sales</button>
-        <button id="tab-Expenses" onclick="switchTab('Expenses')" class="btn-tab-inactive px-4 py-2 rounded-xl font-medium text-sm">Expenses</button>
-        <button id="tab-Purchases" onclick="switchTab('Purchases')" class="btn-tab-inactive px-4 py-2 rounded-xl font-medium text-sm">Purchases</button>
+        <button id="tab-Dashboard" onclick="switchTab('Dashboard')" class="btn-tab-active px-4 py-2 rounded-xl font-medium text-sm transition">Dashboard</button>
+        <button id="tab-Products" onclick="switchTab('Products')" class="btn-tab-inactive px-4 py-2 rounded-xl font-medium text-sm transition">Products</button>
+        <button id="tab-Sales" onclick="switchTab('Sales')" class="btn-tab-inactive px-4 py-2 rounded-xl font-medium text-sm transition">Sales</button>
+        <button id="tab-Expenses" onclick="switchTab('Expenses')" class="btn-tab-inactive px-4 py-2 rounded-xl font-medium text-sm transition">Expenses</button>
+        <button id="tab-Purchases" onclick="switchTab('Purchases')" class="btn-tab-inactive px-4 py-2 rounded-xl font-medium text-sm transition">Purchases</button>
     </div>
 
     <!-- Main Content -->
-    <div class="max-w-6xl mx-auto px-4 my-6">
+    <div class="max-w-6xl mx-auto px-4 my-6 space-y-8">
+        
         <!-- DASHBOARD TAB -->
         <div id="content-Dashboard" class="space-y-6">
-            <h2 class="text-2xl font-serif font-bold text-gray-900">Business Dashboard</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100"><p class="text-xs text-gray-500 font-medium">Total Investment</p><h3 id="dashInvestment" class="text-2xl font-bold text-gray-900 mt-1">₹0.00</h3></div>
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100"><p class="text-xs text-gray-500 font-medium">Actual Sales</p><h3 id="dashSales" class="text-2xl font-bold text-gray-900 mt-1">₹0.00</h3></div>
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100"><p class="text-xs text-gray-500 font-medium">Gross Profit</p><h3 id="dashGrossProfit" class="text-2xl font-bold text-emerald-600 mt-1">₹0.00</h3></div>
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100"><p class="text-xs text-gray-500 font-medium">Expenses</p><h3 id="dashExpenses" class="text-2xl font-bold text-rose-600 mt-1">₹0.00</h3></div>
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100"><p class="text-xs text-gray-500 font-medium">Net Profit</p><h3 id="dashNetProfit" class="text-2xl font-bold text-emerald-600 mt-1">₹0.00</h3></div>
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100"><p class="text-xs text-gray-500 font-medium">Stock Cost Remaining</p><h3 id="dashStockCost" class="text-2xl font-bold text-gray-900 mt-1">₹0.00</h3></div>
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100"><p class="text-xs text-gray-500 font-medium">Net Margin</p><h3 id="dashNetMargin" class="text-2xl font-bold text-gray-900 mt-1">0.0%</h3></div>
+            <div class="flex items-center justify-between">
+                <h2 class="text-2xl font-serif font-bold text-gray-900">Business Dashboard</h2>
+                <span class="text-xs text-gray-500 bg-white px-3 py-1 rounded-full border border-gray-200 shadow-sm"><i class="fa-solid fa-chart-line text-maroon mr-1"></i> Live Overview</span>
+            </div>
+
+            <!-- SECTION 1: LIVE FINANCIAL HEALTH -->
+            <div>
+                <h3 class="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-3"><i class="fa-solid fa-wallet text-maroon mr-1"></i> Actual Financial Performance</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                        <p class="text-xs text-gray-500 font-medium">Actual Sales Recorded</p>
+                        <h3 id="dashSales" class="text-2xl font-bold text-gray-900 mt-1">₹0.00</h3>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                        <p class="text-xs text-gray-500 font-medium">Actual Gross Profit</p>
+                        <h3 id="dashGrossProfit" class="text-2xl font-bold text-emerald-600 mt-1">₹0.00</h3>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                        <p class="text-xs text-gray-500 font-medium">Business Expenses</p>
+                        <h3 id="dashExpenses" class="text-2xl font-bold text-rose-600 mt-1">₹0.00</h3>
+                    </div>
+                    <!-- Hero Net Profit Card -->
+                    <div class="bg-[#f3ecef] p-5 rounded-2xl shadow-sm border border-[#e4d2da]">
+                        <p class="text-xs text-maroon font-bold uppercase tracking-wider">Net Profit Recorded</p>
+                        <h3 id="dashNetProfit" class="text-2xl font-bold text-maroon mt-1">₹0.00</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: INVENTORY & STOCK HEALTH -->
+            <div>
+                <h3 class="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-3"><i class="fa-solid fa-boxes-stacked text-maroon mr-1"></i> Inventory & Stock Status</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                        <p class="text-xs text-gray-500 font-medium">Total Stock Purchased</p>
+                        <h3 id="dashStockPurchased" class="text-2xl font-bold text-gray-900 mt-1">0 pcs</h3>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                        <p class="text-xs text-gray-500 font-medium">Pieces Sold (Register)</p>
+                        <h3 id="dashPiecesSold" class="text-2xl font-bold text-blue-600 mt-1">0 pcs</h3>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                        <p class="text-xs text-gray-500 font-medium">Stock Remaining</p>
+                        <h3 id="dashStockRemaining" class="text-2xl font-bold text-emerald-600 mt-1">0 pcs</h3>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                        <p class="text-xs text-gray-500 font-medium">Stock Cost Remaining</p>
+                        <h3 id="dashStockCost" class="text-2xl font-bold text-gray-900 mt-1">₹0.00</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 3: PROJECTIONS & MARGINS -->
+            <div>
+                <h3 class="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-3"><i class="fa-solid fa-bullseye text-maroon mr-1"></i> Projections & Investments</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                        <p class="text-xs text-gray-500 font-medium">Total Purchase Investment</p>
+                        <h3 id="dashInvestment" class="text-2xl font-bold text-gray-900 mt-1">₹0.00</h3>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                        <p class="text-xs text-gray-500 font-medium">Expected Sales (If All Sold)</p>
+                        <h3 id="dashExpectedSales" class="text-2xl font-bold text-gray-900 mt-1">₹0.00</h3>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                        <p class="text-xs text-gray-500 font-medium">Expected Gross Profit</p>
+                        <h3 id="dashExpectedProfit" class="text-2xl font-bold text-emerald-600 mt-1">₹0.00</h3>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                        <p class="text-xs text-gray-500 font-medium">Expected Net Margin</p>
+                        <h3 id="dashNetMargin" class="text-2xl font-bold text-maroon mt-1">0.0%</h3>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -247,27 +312,56 @@
 
       function calculateDashboard() {
         let actualSales = 0, totalExpenses = 0, totalInvestment = 0, costOfGoodsSold = 0;
+        let totalStockPurchased = 0, totalPiecesSold = 0;
+
         if (storeData.sales.length > 1) {
-          storeData.sales.slice(1).forEach(row => { actualSales += parseFloat(row[6]) || 0; costOfGoodsSold += parseFloat(row[8]) || 0; });
+          storeData.sales.slice(1).forEach(row => { 
+            actualSales += parseFloat(row[6]) || 0; 
+            costOfGoodsSold += parseFloat(row[8]) || 0; 
+            totalPiecesSold += parseInt(row[3]) || 0;
+          });
         }
         if (storeData.expenses.length > 1) {
           storeData.expenses.slice(1).forEach(row => { totalExpenses += parseFloat(row[3]) || 0; });
         }
         if (storeData.purchases.length > 1) {
-          storeData.purchases.slice(1).forEach(row => { totalInvestment += parseFloat(row[11]) || 0; });
+          storeData.purchases.slice(1).forEach(row => { 
+            totalInvestment += parseFloat(row[11]) || 0; 
+            totalStockPurchased += parseInt(row[5]) || 0;
+          });
         }
 
         let grossProfit = actualSales - costOfGoodsSold;
         let netProfit = grossProfit - totalExpenses;
         let stockCostRemaining = totalInvestment - costOfGoodsSold;
+        let stockRemaining = totalStockPurchased - totalPiecesSold;
+        
+        // Dynamic Projections based on Product Master or Estimations
+        let expectedSales = 0;
+        if (storeData.products.length > 1) {
+          storeData.products.slice(1).forEach(row => {
+            const purchasedQty = parseInt(row[3]) || 0;
+            const sellingPrice = parseFloat(row[6]) || 0;
+            expectedSales += (purchasedQty * sellingPrice);
+          });
+        }
+        let expectedGrossProfit = expectedSales > 0 ? (expectedSales - totalInvestment) : 0;
         let netMargin = actualSales > 0 ? ((netProfit / actualSales) * 100).toFixed(1) : "0.0";
 
-        document.getElementById('dashInvestment').innerText = `₹${totalInvestment.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
-        document.getElementById('dashSales').innerText = `₹${actualSales.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
-        document.getElementById('dashGrossProfit').innerText = `₹${grossProfit.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
-        document.getElementById('dashExpenses').innerText = `₹${totalExpenses.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
-        document.getElementById('dashNetProfit').innerText = `₹${netProfit.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
-        document.getElementById('dashStockCost').innerText = `₹${Math.max(0, stockCostRemaining).toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
+        // Update Dashboard DOM Elements
+        document.getElementById('dashInvestment').innerText = `₹${totalInvestment.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        document.getElementById('dashSales').innerText = `₹${actualSales.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        document.getElementById('dashGrossProfit').innerText = `₹${grossProfit.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        document.getElementById('dashExpenses').innerText = `₹${totalExpenses.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        document.getElementById('dashNetProfit').innerText = `₹${netProfit.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        document.getElementById('dashStockCost').innerText = `₹${Math.max(0, stockCostRemaining).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        
+        document.getElementById('dashStockPurchased').innerText = `${totalStockPurchased} pcs`;
+        document.getElementById('dashPiecesSold').innerText = `${totalPiecesSold} pcs`;
+        document.getElementById('dashStockRemaining').innerText = `${Math.max(0, stockRemaining)} pcs`;
+        
+        document.getElementById('dashExpectedSales').innerText = `₹${expectedSales.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        document.getElementById('dashExpectedProfit').innerText = `₹${expectedGrossProfit.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
         document.getElementById('dashNetMargin').innerText = `${netMargin}%`;
       }
 
