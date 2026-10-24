@@ -15,7 +15,139 @@
         .btn-tab-active { background-color: #581c3f; color: white; }
         .btn-tab-inactive { background-color: #f3ecef; color: #581c3f; }
     </style>
+</head>
+<body class="bg-[#f9f6f0] min-h-screen text-gray-800 font-sans">
+    <!-- Header Banner -->
+    <div class="bg-maroon text-white text-center py-6 shadow-md relative">
+        <h1 class="text-3xl font-serif font-bold italic tracking-wide">Hanu Collection</h1>
+        <p class="text-xs uppercase tracking-widest text-amber-200 mt-1">Style That Speaks You</p>
+        <div class="absolute top-4 right-4 flex items-center gap-2">
+            <span id="syncStatus" class="text-xs text-amber-200">Syncing...</span>
+            <button onclick="fetchAllData()" class="p-1.5 bg-white/10 rounded-lg hover:bg-white/20 text-white transition"><i class="fa-solid fa-rotate text-xs"></i></button>
+        </div>
+    </div>
 
+    <!-- Navigation Tabs -->
+    <div class="max-w-6xl mx-auto px-4 mt-6 flex flex-wrap gap-2">
+        <button id="tab-Dashboard" onclick="switchTab('Dashboard')" class="btn-tab-active px-4 py-2 rounded-xl font-medium text-sm">Dashboard</button>
+        <button id="tab-Products" onclick="switchTab('Products')" class="btn-tab-inactive px-4 py-2 rounded-xl font-medium text-sm">Products</button>
+        <button id="tab-Sales" onclick="switchTab('Sales')" class="btn-tab-inactive px-4 py-2 rounded-xl font-medium text-sm">Sales</button>
+        <button id="tab-Expenses" onclick="switchTab('Expenses')" class="btn-tab-inactive px-4 py-2 rounded-xl font-medium text-sm">Expenses</button>
+        <button id="tab-Purchases" onclick="switchTab('Purchases')" class="btn-tab-inactive px-4 py-2 rounded-xl font-medium text-sm">Purchases</button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-6xl mx-auto px-4 my-6">
+        <!-- DASHBOARD TAB -->
+        <div id="content-Dashboard" class="space-y-6">
+            <h2 class="text-2xl font-serif font-bold text-gray-900">Business Dashboard</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100"><p class="text-xs text-gray-500 font-medium">Total Investment</p><h3 id="dashInvestment" class="text-2xl font-bold text-gray-900 mt-1">₹0.00</h3></div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100"><p class="text-xs text-gray-500 font-medium">Actual Sales</p><h3 id="dashSales" class="text-2xl font-bold text-gray-900 mt-1">₹0.00</h3></div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100"><p class="text-xs text-gray-500 font-medium">Gross Profit</p><h3 id="dashGrossProfit" class="text-2xl font-bold text-emerald-600 mt-1">₹0.00</h3></div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100"><p class="text-xs text-gray-500 font-medium">Expenses</p><h3 id="dashExpenses" class="text-2xl font-bold text-rose-600 mt-1">₹0.00</h3></div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100"><p class="text-xs text-gray-500 font-medium">Net Profit</p><h3 id="dashNetProfit" class="text-2xl font-bold text-emerald-600 mt-1">₹0.00</h3></div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100"><p class="text-xs text-gray-500 font-medium">Stock Cost Remaining</p><h3 id="dashStockCost" class="text-2xl font-bold text-gray-900 mt-1">₹0.00</h3></div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100"><p class="text-xs text-gray-500 font-medium">Net Margin</p><h3 id="dashNetMargin" class="text-2xl font-bold text-gray-900 mt-1">0.0%</h3></div>
+            </div>
+        </div>
+
+        <!-- PRODUCTS TAB -->
+        <div id="content-Products" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">Product Master</h3>
+                <div class="overflow-x-auto"><table class="w-full text-left border-collapse">
+                    <thead><tr class="bg-gray-50 text-xs font-semibold text-gray-500 uppercase border-b border-gray-200"><th class="p-3">Article No.</th><th class="p-3">Product Name</th><th class="p-3 text-center">Purchased</th><th class="p-3 text-right">Unit Cost</th><th class="p-3 text-right">Selling Price</th><th class="p-3 text-center">Sold</th><th class="p-3 text-center">Stock Remaining</th></tr></thead>
+                    <tbody id="productsTableBody"><tr><td colspan="7" class="p-4 text-center text-gray-400">Loading...</td></tr></tbody>
+                </table></div>
+            </div>
+        </div>
+
+        <!-- SALES TAB -->
+        <div id="content-Sales" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <h3 class="text-md font-bold text-gray-800 mb-3"><i class="fa-solid fa-plus-circle text-maroon"></i> Record New Sale</h3>
+                <form id="saleForm" onsubmit="submitForm(event, 'Sales Register', 'saleForm')" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    <input type="date" name="date" required class="p-2.5 border rounded-xl text-sm bg-gray-50">
+                    
+                    <!-- Article Dropdown -->
+                    <select name="article" id="saleArticleSelect" onchange="autofillProductDetails()" required class="p-2.5 border rounded-xl text-sm bg-white">
+                        <option value="">Select Article No.</option>
+                    </select>
+
+                    <!-- Product Name (Auto-filled) -->
+                    <input type="text" name="product" id="saleProductInput" placeholder="Product Name" required class="p-2.5 border rounded-xl text-sm bg-gray-50" readonly>
+
+                    <!-- Quantity -->
+                    <input type="number" name="qty" id="saleQtyInput" placeholder="Quantity" value="1" min="1" oninput="autofillProductDetails()" required class="p-2.5 border rounded-xl text-sm">
+
+                    <!-- Sales Total (Auto-filled) -->
+                    <input type="number" name="salesValue" id="saleValueInput" placeholder="Sales Total (₹)" required class="p-2.5 border rounded-xl text-sm">
+
+                    <!-- COGS (Auto-filled) -->
+                    <input type="number" name="cogs" id="cogsInput" placeholder="COGS (₹)" required class="p-2.5 border rounded-xl text-sm">
+
+                    <!-- Customer Name -->
+                    <input type="text" name="customer" placeholder="Customer Name" class="p-2.5 border rounded-xl text-sm">
+                    
+                    <button type="submit" class="bg-maroon text-white font-medium py-2.5 rounded-xl shadow hover:bg-opacity-90 transition">Save Sale</button>
+                </form>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">Sales Register</h3>
+                <div class="overflow-x-auto"><table class="w-full text-left border-collapse">
+                    <thead><tr class="bg-gray-50 text-xs font-semibold text-gray-500 uppercase border-b border-gray-200"><th class="p-3">Date</th><th class="p-3">Article No.</th><th class="p-3">Product</th><th class="p-3 text-center">Qty</th><th class="p-3 text-right">Sales Value</th><th class="p-3">Customer</th><th class="p-3 text-center">Action</th></tr></thead>
+                    <tbody id="salesTableBody"><tr><td colspan="7" class="p-4 text-center text-gray-400">Loading...</td></tr></tbody>
+                </table></div>
+            </div>
+        </div>
+
+        <!-- EXPENSES TAB -->
+        <div id="content-Expenses" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <h3 class="text-md font-bold text-gray-800 mb-3"><i class="fa-solid fa-plus-circle text-maroon"></i> Record New Expense</h3>
+                <form id="expenseForm" onsubmit="submitForm(event, 'Expenses', 'expenseForm')" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    <input type="date" name="date" required class="p-2.5 border rounded-xl text-sm bg-gray-50">
+                    <input type="text" name="type" placeholder="Expense Type" required class="p-2.5 border rounded-xl text-sm">
+                    <input type="text" name="description" placeholder="Description" required class="p-2.5 border rounded-xl text-sm">
+                    <input type="number" name="amount" placeholder="Amount (₹)" required class="p-2.5 border rounded-xl text-sm">
+                    <button type="submit" class="col-span-full sm:col-span-1 bg-maroon text-white font-medium py-2.5 rounded-xl shadow hover:bg-opacity-90 transition">Save</button>
+                </form>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">Expenses Register</h3>
+                <div class="overflow-x-auto"><table class="w-full text-left border-collapse">
+                    <thead><tr class="bg-gray-50 text-xs font-semibold text-gray-500 uppercase border-b border-gray-200"><th class="p-3">Date</th><th class="p-3">Expense Type</th><th class="p-3">Description</th><th class="p-3 text-right">Amount</th><th class="p-3 text-center">Action</th></tr></thead>
+                    <tbody id="expensesTableBody"><tr><td colspan="5" class="p-4 text-center text-gray-400">Loading...</td></tr></tbody>
+                </table></div>
+            </div>
+        </div>
+
+        <!-- PURCHASES TAB -->
+        <div id="content-Purchases" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <h3 class="text-md font-bold text-gray-800 mb-3"><i class="fa-solid fa-plus-circle text-maroon"></i> Record New Purchase Bill</h3>
+                <form id="purchaseForm" onsubmit="submitForm(event, 'Purchase Bills', 'purchaseForm')" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    <input type="date" name="date" required class="p-2.5 border rounded-xl text-sm bg-gray-50">
+                    <input type="text" name="supplier" placeholder="Supplier Name" required class="p-2.5 border rounded-xl text-sm">
+                    <input type="text" name="description" placeholder="Item Description" required class="p-2.5 border rounded-xl text-sm">
+                    <input type="number" name="qty" placeholder="Quantity" required class="p-2.5 border rounded-xl text-sm">
+                    <input type="number" name="rate" placeholder="Unit Rate (₹)" required class="p-2.5 border rounded-xl text-sm">
+                    <input type="number" name="total" placeholder="Invoice Total (₹)" required class="p-2.5 border rounded-xl text-sm">
+                    <button type="submit" class="col-span-full sm:col-span-2 bg-maroon text-white font-medium py-2.5 rounded-xl shadow hover:bg-opacity-90 transition">Save Purchase</button>
+                </form>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">Purchase Bills</h3>
+                <div class="overflow-x-auto"><table class="w-full text-left border-collapse">
+                    <thead><tr class="bg-gray-50 text-xs font-semibold text-gray-500 uppercase border-b border-gray-200"><th class="p-3">Bill Date</th><th class="p-3">Supplier</th><th class="p-3">Description</th><th class="p-3 text-center">Qty</th><th class="p-3 text-right">Rate</th><th class="p-3 text-right">Invoice Total</th><th class="p-3 text-center">Action</th></tr></thead>
+                    <tbody id="purchasesTableBody"><tr><td colspan="7" class="p-4 text-center text-gray-400">Loading...</td></tr></tbody>
+                </table></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Section -->
     <script>
       const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzbgBrocHpKqPQkoE2uw5dzuSl310VTbq2mSTG8OMbG8iUNtHjnGXm4wW1IkwyGbyAQ/exec";
       let storeData = { products: [], sales: [], expenses: [], purchases: [] };
@@ -136,4 +268,136 @@
         document.getElementById('dashExpenses').innerText = `₹${totalExpenses.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
         document.getElementById('dashNetProfit').innerText = `₹${netProfit.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
         document.getElementById('dashStockCost').innerText = `₹${Math.max(0, stockCostRemaining).toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
-        document.getElementById('dash
+        document.getElementById('dashNetMargin').innerText = `${netMargin}%`;
+      }
+
+      function renderAllTables() {
+        renderProductsTable();
+        renderSalesTable();
+        renderExpensesTable();
+        renderPurchasesTable();
+        populateProductDropdowns();
+      }
+
+      function renderProductsTable() {
+        const tbody = document.getElementById('productsTableBody');
+        tbody.innerHTML = '';
+        if (storeData.products.length > 1) {
+          storeData.products.slice(1).forEach((row) => {
+            tbody.innerHTML += `<tr class="border-b border-gray-100 hover:bg-gray-50 text-sm">
+              <td class="p-3 font-mono text-xs text-gray-600">${row[1] || 'N/A'}</td>
+              <td class="p-3 font-semibold text-gray-800">${row[2] || 'N/A'}</td>
+              <td class="p-3 text-center">${row[3] || 0}</td>
+              <td class="p-3 text-right">₹${parseFloat(row[4] || 0).toFixed(2)}</td>
+              <td class="p-3 text-right font-semibold text-gray-800">₹${parseFloat(row[6] || 0).toFixed(2)}</td>
+              <td class="p-3 text-center font-bold text-blue-600">${row[11] || 0}</td>
+              <td class="p-3 text-center font-bold ${(row[12] || 0) > 0 ? 'text-green-600' : 'text-gray-400'}">${row[12] || 0}</td>
+            </tr>`;
+          });
+        } else { tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-gray-500">No products found.</td></tr>`; }
+      }
+
+      function renderSalesTable() {
+        const tbody = document.getElementById('salesTableBody');
+        tbody.innerHTML = '';
+        if (storeData.sales.length > 1) {
+          storeData.sales.slice(1).forEach((row, i) => {
+            const rowIndex = i + 2;
+            tbody.innerHTML += `<tr class="border-b border-gray-100 hover:bg-gray-50 text-sm">
+              <td class="p-3 text-gray-700">${row[0] ? new Date(row[0]).toLocaleDateString() : 'N/A'}</td>
+              <td class="p-3 font-mono text-xs text-gray-500">${row[1] || ''}</td>
+              <td class="p-3 font-semibold text-gray-800">${row[2] || ''}</td>
+              <td class="p-3 text-center">${row[3] || 1}</td>
+              <td class="p-3 font-bold text-green-600 text-right">₹${parseFloat(row[6] || 0).toFixed(2)}</td>
+              <td class="p-3 text-gray-600">${row[10] || 'N/A'}</td>
+              <td class="p-3 text-center"><button onclick="deleteRow('Sales Register', ${rowIndex})" class="text-rose-500 hover:text-rose-700 p-1"><i class="fa-solid fa-trash"></i></button></td>
+            </tr>`;
+          });
+        } else { tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-gray-500">No sales recorded yet.</td></tr>`; }
+      }
+
+      function renderExpensesTable() {
+        const tbody = document.getElementById('expensesTableBody');
+        tbody.innerHTML = '';
+        if (storeData.expenses.length > 1) {
+          storeData.expenses.slice(1).forEach((row, i) => {
+            const rowIndex = i + 2;
+            tbody.innerHTML += `<tr class="border-b border-gray-100 hover:bg-gray-50 text-sm">
+              <td class="p-3 text-gray-700">${row[0] ? new Date(row[0]).toLocaleDateString() : 'N/A'}</td>
+              <td class="p-3 font-semibold text-gray-800">${row[1] || ''}</td>
+              <td class="p-3 text-gray-600">${row[2] || ''}</td>
+              <td class="p-3 font-bold text-rose-600 text-right">₹${parseFloat(row[3] || 0).toFixed(2)}</td>
+              <td class="p-3 text-center"><button onclick="deleteRow('Expenses', ${rowIndex})" class="text-rose-500 hover:text-rose-700 p-1"><i class="fa-solid fa-trash"></i></button></td>
+            </tr>`;
+          });
+        } else { tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-500">No expenses recorded yet.</td></tr>`; }
+      }
+
+      function renderPurchasesTable() {
+        const tbody = document.getElementById('purchasesTableBody');
+        tbody.innerHTML = '';
+        if (storeData.purchases.length > 1) {
+          storeData.purchases.slice(1).forEach((row, i) => {
+            const rowIndex = i + 2;
+            tbody.innerHTML += `<tr class="border-b border-gray-100 hover:bg-gray-50 text-sm">
+              <td class="p-3 text-gray-700">${row[1] || 'N/A'}</td>
+              <td class="p-3 text-gray-600">${row[2] || 'N/A'}</td>
+              <td class="p-3 font-semibold text-gray-800">${row[4] || 'N/A'}</td>
+              <td class="p-3 text-center">${row[5] || 0}</td>
+              <td class="p-3 text-right">₹${parseFloat(row[6] || 0).toFixed(2)}</td>
+              <td class="p-3 font-bold text-gray-900 text-right">₹${parseFloat(row[11] || 0).toFixed(2)}</td>
+              <td class="p-3 text-center"><button onclick="deleteRow('Purchase Bills', ${rowIndex})" class="text-rose-500 hover:text-rose-700 p-1"><i class="fa-solid fa-trash"></i></button></td>
+            </tr>`;
+          });
+        } else { tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-gray-500">No purchase bills found.</td></tr>`; }
+      }
+
+      function populateProductDropdowns() {
+        const articleSelect = document.getElementById('saleArticleSelect');
+        if (!articleSelect) return;
+
+        articleSelect.innerHTML = '<option value="">Select Article No.</option>';
+
+        if (storeData.products && storeData.products.length > 1) {
+            storeData.products.slice(1).forEach(row => {
+                const articleNo = row[1];
+                const productName = row[2];
+                const unitCost = parseFloat(row[4]) || 0;
+                const sellingPrice = parseFloat(row[6]) || 0;
+
+                if (articleNo) {
+                    articleSelect.innerHTML += `<option value="${articleNo}" data-name="${productName}" data-price="${sellingPrice}" data-cost="${unitCost}">${articleNo} - ${productName}</option>`;
+                }
+            });
+        }
+      }
+
+      function autofillProductDetails() {
+        const articleSelect = document.getElementById('saleArticleSelect');
+        const selectedOption = articleSelect.options[articleSelect.selectedIndex];
+        
+        const productInput = document.getElementById('saleProductInput');
+        const salesValueInput = document.getElementById('saleValueInput');
+        const cogsInput = document.getElementById('cogsInput');
+        const qtyInput = document.getElementById('saleQtyInput');
+
+        if (selectedOption && selectedOption.value) {
+            const productName = selectedOption.dataset.name || '';
+            const basePrice = parseFloat(selectedOption.dataset.price) || 0;
+            const baseCost = parseFloat(selectedOption.dataset.cost) || 0;
+            const qty = qtyInput ? (parseFloat(qtyInput.value) || 1) : 1;
+
+            if (productInput) productInput.value = productName;
+            if (salesValueInput) salesValueInput.value = (basePrice * qty).toFixed(2);
+            if (cogsInput) cogsInput.value = (baseCost * qty).toFixed(2);
+        } else {
+            if (productInput) productInput.value = '';
+            if (salesValueInput) salesValueInput.value = '';
+            if (cogsInput) cogsInput.value = '';
+        }
+      }
+
+      window.onload = fetchAllData;
+    </script>
+</body>
+</html>
