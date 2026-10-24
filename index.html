@@ -275,12 +275,27 @@
                 <h3 class="text-md font-bold text-gray-800 mb-3"><i class="fa-solid fa-plus-circle text-maroon"></i> Record New Sale</h3>
                 <form id="saleForm" onsubmit="submitForm(event, 'Sales Register', 'saleForm')" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                     <input type="date" name="date" required class="p-2.5 border rounded-xl text-sm bg-gray-50">
-                    <input type="text" name="article" placeholder="Article No" required class="p-2.5 border rounded-xl text-sm">
-                    <input type="text" name="product" placeholder="Product Name" required class="p-2.5 border rounded-xl text-sm">
-                    <input type="number" name="qty" placeholder="Quantity" value="1" required class="p-2.5 border rounded-xl text-sm">
-                    <input type="number" name="salesValue" placeholder="Sales Total (₹)" required class="p-2.5 border rounded-xl text-sm">
-                    <input type="number" name="cogs" placeholder="COGS (₹)" required class="p-2.5 border rounded-xl text-sm">
+                    
+                    <!-- Article Dropdown -->
+                    <select name="article" id="saleArticleSelect" onchange="autofillProductDetails()" required class="p-2.5 border rounded-xl text-sm bg-white">
+                        <option value="">Select Article No.</option>
+                    </select>
+
+                    <!-- Product Name (Auto-filled) -->
+                    <input type="text" name="product" id="saleProductInput" placeholder="Product Name" required class="p-2.5 border rounded-xl text-sm bg-gray-50" readonly>
+
+                    <!-- Quantity -->
+                    <input type="number" name="qty" id="saleQtyInput" placeholder="Quantity" value="1" min="1" oninput="autofillProductDetails()" required class="p-2.5 border rounded-xl text-sm">
+
+                    <!-- Sales Total (Auto-filled) -->
+                    <input type="number" name="salesValue" id="saleValueInput" placeholder="Sales Total (₹)" required class="p-2.5 border rounded-xl text-sm">
+
+                    <!-- COGS (Auto-filled) -->
+                    <input type="number" name="cogs" id="cogsInput" placeholder="COGS (₹)" required class="p-2.5 border rounded-xl text-sm">
+
+                    <!-- Customer Name -->
                     <input type="text" name="customer" placeholder="Customer Name" class="p-2.5 border rounded-xl text-sm">
+                    
                     <button type="submit" class="bg-maroon text-white font-medium py-2.5 rounded-xl shadow hover:bg-opacity-90 transition">Save Sale</button>
                 </form>
             </div>
@@ -292,7 +307,6 @@
                 </table></div>
             </div>
         </div>
-
         <!-- EXPENSES TAB -->
         <div id="content-Expenses" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
@@ -339,3 +353,50 @@
     </div>
 </body>
 </html>
+// Populate Article Dropdown from Product Master
+function populateProductDropdowns() {
+    const articleSelect = document.getElementById('saleArticleSelect');
+    if (!articleSelect) return;
+
+    articleSelect.innerHTML = '<option value="">Select Article No.</option>';
+
+    if (storeData.products && storeData.products.length > 1) {
+        // Skip header row (index 0) and loop through products
+        storeData.products.slice(1).forEach(row => {
+            const articleNo = row[1]; // Column index for Article No.
+            const productName = row[2]; // Column index for Product Name
+            const unitCost = parseFloat(row[4]) || 0; // Column index for Unit Cost (COGS)
+            const sellingPrice = parseFloat(row[6]) || 0; // Column index for Selling Price
+
+            if (articleNo) {
+                articleSelect.innerHTML += `<option value="${articleNo}" data-name="${productName}" data-price="${sellingPrice}" data-cost="${unitCost}">${articleNo} - ${productName}</option>`;
+            }
+        });
+    }
+}
+
+// Auto-fill Product Name, Sales Value, and COGS when Article is selected or Quantity changes
+function autofillProductDetails() {
+    const articleSelect = document.getElementById('saleArticleSelect');
+    const selectedOption = articleSelect.options[articleSelect.selectedIndex];
+    
+    const productInput = document.getElementById('saleProductInput');
+    const salesValueInput = document.getElementById('saleValueInput');
+    const cogsInput = document.getElementById('cogsInput');
+    const qtyInput = document.getElementById('saleQtyInput');
+
+    if (selectedOption && selectedOption.value) {
+        const productName = selectedOption.dataset.name || '';
+        const basePrice = parseFloat(selectedOption.dataset.price) || 0;
+        const baseCost = parseFloat(selectedOption.dataset.cost) || 0;
+        const qty = qtyInput ? (parseFloat(qtyInput.value) || 1) : 1;
+
+        if (productInput) productInput.value = productName;
+        if (salesValueInput) salesValueInput.value = (basePrice * qty).toFixed(2);
+        if (cogsInput) cogsInput.value = (baseCost * qty).toFixed(2);
+    } else {
+        if (productInput) productInput.value = '';
+        if (salesValueInput) salesValueInput.value = '';
+        if (cogsInput) cogsInput.value = '';
+    }
+}
